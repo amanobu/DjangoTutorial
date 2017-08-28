@@ -1,0 +1,13 @@
+{% if latest_question_list %}
+<ul>
+  {% for question in latest_question_list %}
+  {# <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li> #}
+  {# ↑のコードはURLをハードコーディングしてしまっているので、以下の様に変更する %}
+  {# これは、 polls.urls モジュール内の url() 関数の name 引数を定義したため、テンプレートタグの {% url %} を用いることで、 URL 設定で定義された特定の URL パスへの依存をなくすことができます: #}
+  {# polls:detail pollsはこのアプリの名前空間 #}
+  <li><a href="{% url 'polls:detail' question.id%}">{{ question.question_text }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p> No polls are available.</p>
+{% endif %}

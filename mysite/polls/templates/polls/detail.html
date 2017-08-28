@@ -1,0 +1,7 @@
+<h1>{{ question.question_text }}</h1>
+<ul>
+  {#　ここはコメント行: question.choice_set.all は question.choice_set.all() を呼び出している #}
+  {% for choice in question.choice_set.all %}
+  <li>{{ choice.choice_text }}</li>
+  {% endfor %}
+</ul>
