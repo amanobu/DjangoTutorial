@@ -7,6 +7,7 @@ from django.http import Http404
 from .models import Choice,Question
 from django.db.models import F
 from django.views import generic
+from django.utils import timezone
 # Create your views here.
 
 #「オブジェクトのリストを表示する」を抽象化
@@ -23,7 +24,9 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        return Question.objects.order_by('-pub_date')[:5]
+        #この pub_date__lte=timezone.new() でpub_date が timezone.now 以前という条件指定が出来る様だ
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+        #return Question.objects.order_by('-pub_date')[:5]
 
 
 #「オブジェクトの詳細を表示する」を抽象化
@@ -34,6 +37,9 @@ class DetailView(generic.DetailView):
     template_name = 'polls/detail.html'
 
     #汎用Viewでは'pk'という名前でURLからプライマリキーを持ってくることになっているので question_id を pk に変更している
+
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 
 class ResultView(generic.DetailView):
