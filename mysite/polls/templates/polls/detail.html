@@ -1,7 +1,14 @@
 <h1>{{ question.question_text }}</h1>
-<ul>
-  {#　ここはコメント行: question.choice_set.all は question.choice_set.all() を呼び出している #}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+  {% csrf_token %}
+  {# question.choice_set.all -> question.choice_set.all() らしいのだが、choice_setってなんだ？ #}
   {% for choice in question.choice_set.all %}
-  <li>{{ choice.choice_text }}</li>
+  {# forloop.counter は、ttag:for タグのループが何度実行されたかを表す値です。 #}
+  <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }} " />
+  <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
   {% endfor %}
-</ul>
+  <input type="submit" value="Vote" />
+</form>
