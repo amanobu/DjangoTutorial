@@ -6,7 +6,40 @@ from django.template import loader
 from django.http import Http404
 from .models import Choice,Question
 from django.db.models import F
+from django.views import generic
 # Create your views here.
+
+#「オブジェクトのリストを表示する」を抽象化
+#Djangoには決まり切った処理の物が決まっているらしい：汎用View？と呼ばれいている様だ
+class IndexView(generic.ListView):
+    #ListViewは <app name>/<model name>_list.html というのをデフォルトで使うが、今回異なるので指示している
+    template_name = 'polls/index.html'
+
+    #いままではhtml側に値を渡すためにコンテキストに適当な変数を定義して渡していたが、DetailViewを使うと
+    #modelに設定された内容で良さそうな名前でhtml側に渡す変数を定義されちゃう。
+    #例えばDetailViewのClassはmodel = Questionなので question がそのままhtmlが側で拾えるらしい
+    #ListViewだと、自動的に question_list となるが、今回html側ではすでに latest_question_list という変数で
+    #値を取得しているので下記のコードでDjangoに使いたい変数名を指示している
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        return Question.objects.order_by('-pub_date')[:5]
+
+
+#「オブジェクトの詳細を表示する」を抽象化
+class DetailView(generic.DetailView):
+    #どのモデルの詳細を表示するかという指示に当たる模様
+    model = Question
+    #DetailViewは <app name>/<model name>_detail.html というのをデフォルトで使うが、今回異なるので指示している
+    template_name = 'polls/detail.html'
+
+    #汎用Viewでは'pk'という名前でURLからプライマリキーを持ってくることになっているので question_id を pk に変更している
+
+
+class ResultView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
+
 
 #def index(request):
 #    #システム上にある最新の 5 件
@@ -21,6 +54,7 @@ from django.db.models import F
 #    #return HttpResponse(output)
 #    return HttpResponse(template.render(context,request))
 
+# 汎用Viewを使う事になったので未使用
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
     context = {
@@ -39,14 +73,14 @@ def index(request):
 #        raise Http404("Question does not exist!!!")
 #    return render(request, 'polls/detail.html', {'question': question})
 
-
+# 汎用Viewを使う事になったので未使用
 def detail(request, question_id):
     #get() を実行し、オブジェクトが存在しない場合には Http404 を送出することは非常によく使われるイディオムです。 Django はこのためのショートカットを提供しています
     #get_list_or_404() という関数もあります。この関数は get_object_or_404() と同じように動きますが、 get() ではなく、 filter() を使います。リストが空の場合は Http404 を送出します。
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 
-
+# 汎用Viewを使う事になったので未使用
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/results.html', {'question': question})
