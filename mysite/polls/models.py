@@ -20,6 +20,11 @@ class Question(models.Model):
         now = timezone.now()
         return now >= self.pub_date >= now - datetime.timedelta(days=1)
 
+    #こんな属性を定義すると、管理画面での表記がいい感じになる
+    was_published_recently.admin_order_field = 'pub_date'
+    was_published_recently.boolean = True
+    was_published_recently.short_description = 'Published recently?'
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete = models.CASCADE)

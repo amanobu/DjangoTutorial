@@ -55,7 +55,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #管理画面のテンプレートを追加。↓の'APP_DIRS': Trueが設定されているとDjangoは自動的に各アプリケーションのパッケージのサブディレクトリからtemplates/を探す動きをする
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
