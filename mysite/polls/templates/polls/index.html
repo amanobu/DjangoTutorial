@@ -1,3 +1,8 @@
+{% load static %}
+
+{# {% static %} テンプレートタグは、静的ファイルの完全 URL を生成します。 #}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+
 {% if latest_question_list %}
 <ul>
   {% for question in latest_question_list %}
