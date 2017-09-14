@@ -119,3 +119,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL = '/polls/'
+LOGIN_URL = '/polls/login'
+#LOGIN_URL = 'login'
+
+#Djangoでブラウザを閉じたらセッションを無効にする。つまりログアウトする
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

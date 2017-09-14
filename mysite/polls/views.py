@@ -8,10 +8,12 @@ from .models import Choice,Question
 from django.db.models import F
 from django.views import generic
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 #「オブジェクトのリストを表示する」を抽象化
 #Djangoには決まり切った処理の物が決まっているらしい：汎用View？と呼ばれいている様だ
+
 class IndexView(generic.ListView):
     #ListViewは <app name>/<model name>_list.html というのをデフォルトで使うが、今回異なるので指示している
     template_name = 'polls/index.html'
@@ -27,7 +29,6 @@ class IndexView(generic.ListView):
         #この pub_date__lte=timezone.new() でpub_date が timezone.now 以前という条件指定が出来る様だ
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
         #return Question.objects.order_by('-pub_date')[:5]
-
 
 #「オブジェクトの詳細を表示する」を抽象化
 class DetailView(generic.DetailView):
